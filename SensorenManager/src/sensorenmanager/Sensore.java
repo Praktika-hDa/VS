@@ -32,10 +32,10 @@ public class Sensore extends Thread {
         
         while(_remainingQuantity > 0)
         {
-            Thread.sleep(500);
+            Thread.sleep(1000);
             _remainingQuantity--;
             System.out.println("Sensor: " + _probeNumber + "; Remaining Filling: " + _remainingQuantity);
-            _sendData = ("Sensor: " + _probeNumber + "; Remaining Filling: " + _remainingQuantity).getBytes();
+            _sendData = (_probeNumber + "/" + _remainingQuantity).getBytes();
             _sendPackage = new DatagramPacket(_sendData, _sendData.length, _ip, 4444);
             _clientSocket.send(_sendPackage);
         }
