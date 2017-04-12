@@ -16,18 +16,8 @@ public class Zentrale {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-        int port = 4444;
-        try{
-        
-        ServerSocket listenSocket = new ServerSocket(port);
-        while(true)
-        {
-            Socket client = listenSocket.accept();
-            System.out.println("Incoming Connection:" + client.getRemoteSocketAddress());
-            new SensorConnection(client).start();
-        }
-        } catch(Exception e) {}
+        SensorConnection _sensoren = new SensorConnection(2);
+        _sensoren.start();
     }
     
 }
