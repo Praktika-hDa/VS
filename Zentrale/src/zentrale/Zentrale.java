@@ -16,8 +16,14 @@ public class Zentrale {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        SensorConnection _sensoren = new SensorConnection(2);
-        _sensoren.start();
+        try{
+            SimpleHttpServer webServer = new SimpleHttpServer();
+            SensorConnection _sensoren = new SensorConnection(5, webServer);
+            _sensoren.start();
+        }
+        catch (Exception e) {
+        
+        }
     }
     
 }

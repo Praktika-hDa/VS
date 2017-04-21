@@ -13,10 +13,14 @@ import java.util.ArrayList;
  * @author alex
  */
 public class SensorConnection extends Thread {
-    private List _probeList = new ArrayList();
-    public SensorConnection(int n) {
+    //private List _probeList = new ArrayList();
+    private List<Sensor> _probeList = new ArrayList<Sensor>();
+    private SimpleHttpServer _webServer;
+    public SensorConnection(int n, SimpleHttpServer server) {
+        this._webServer = server;
         for (int i = 0; i < n; i++) {
-            _probeList.add(0);
+            Sensor mySensor = new Sensor(i+1);
+            _probeList.add(mySensor);
         }
     }
     public void run() {
@@ -36,10 +40,13 @@ public class SensorConnection extends Thread {
                 //Convert into Int
                 int _probeNumber = Integer.parseInt(splitedMessage[0]);
                 int _probeRemainingQuantity = Integer.parseInt(splitedMessage[1].trim());
+                String _probeTyp = splitedMessage[2];
                 //Update Collection
-                System.out.println("Anfang Sensor: " + _probeNumber + " Value: " + _probeList.get(_probeNumber-1));
-                _probeList.set(_probeNumber-1, _probeRemainingQuantity);
-                System.out.println("Ende Sensor: " + _probeNumber + " Value: " + _probeList.get(_probeNumber-1));
+                System.out.println("Anfang Sensor: " + _probeNumber + " " + splitedMessage[2] + " Value: " + _probeList.get(_probeNumber-1).getcurrentfilling());
+                _probeList.get(_probeNumber - 1).setcurrentFilling(_probeRemainingQuantity);
+                _probeList.get(_probeNumber - 1).setsensorTyp(_probeTyp);
+                _webServer.setsensorList(_probeList);
+                System.out.println("Ende Sensor: " + _probeNumber + " " + splitedMessage[2] + " Value: " + _probeList.get(_probeNumber-1).getcurrentfilling());
             }
         } catch(Exception e) 
         {
