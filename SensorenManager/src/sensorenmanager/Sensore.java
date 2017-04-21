@@ -19,6 +19,7 @@ public class Sensore extends Thread {
     //Probe variables
     private int _remainingQuantity;
     private int _probeNumber;
+    private String _foodType;
     //Connection variables
     private DatagramSocket _clientSocket;
     private InetAddress _ip;
@@ -34,8 +35,8 @@ public class Sensore extends Thread {
         {
             Thread.sleep(1000);
             _remainingQuantity--;
-            System.out.println("Sensor: " + _probeNumber + "; Remaining Filling: " + _remainingQuantity);
-            _sendData = (_probeNumber + "/" + _remainingQuantity).getBytes();
+            System.out.println("Sensor: " + _foodType + " " + _probeNumber + "; Remaining Filling: " + _remainingQuantity);
+            _sendData = (_probeNumber + "/" + _remainingQuantity +"/" + _foodType + "/").getBytes();
             _sendPackage = new DatagramPacket(_sendData, _sendData.length, _ip, 4444);
             _clientSocket.send(_sendPackage);
         }
@@ -43,8 +44,9 @@ public class Sensore extends Thread {
         } catch (Exception e) {}
     }
     
-    public Sensore(int remainingQuantity, int probeNumber) {
+    public Sensore(int remainingQuantity, int probeNumber, String foodType) {
     this._remainingQuantity = remainingQuantity;
     this._probeNumber = probeNumber;
+    this._foodType = foodType;
     }
 }
