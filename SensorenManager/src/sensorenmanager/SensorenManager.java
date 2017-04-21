@@ -17,9 +17,9 @@ public class SensorenManager {
     public static void main(String[] args) {
         String[] _foodType = new String[] {"Butter","Brot","Salami","Milch","Jever" };
         // TODO code application logic here
-        for (int i = 1; i < 5; i++) {
+        for (int i = 1; i < 6; i++) {
             Random rand = new Random();
-            Sensore mySensore = new Sensore(rand.nextInt(50)+1,i,_foodType[i]);
+            Sensore mySensore = new Sensore(rand.nextInt(50)+1,i,_foodType[i-1]);
             mySensore.start();
         }
     }
