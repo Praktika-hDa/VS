@@ -15,8 +15,8 @@ import java.util.ArrayList;
 public class SensorConnection extends Thread {
     //private List _probeList = new ArrayList();
     private List<Sensor> _probeList = new ArrayList<Sensor>();
-    private SimpleHttpServer _webServer;
-    public SensorConnection(int n, SimpleHttpServer server) {
+    private TCPWebserver _webServer;
+    public SensorConnection(int n, TCPWebserver server) {
         this._webServer = server;
         for (int i = 0; i < n; i++) {
             Sensor mySensor = new Sensor(i+1);
@@ -45,7 +45,7 @@ public class SensorConnection extends Thread {
                 System.out.println("Anfang Sensor: " + _probeNumber + " " + splitedMessage[2] + " Value: " + _probeList.get(_probeNumber-1).getcurrentfilling());
                 _probeList.get(_probeNumber - 1).setcurrentFilling(_probeRemainingQuantity);
                 _probeList.get(_probeNumber - 1).setsensorTyp(_probeTyp);
-                _webServer.setsensorList(_probeList);
+                _webServer.setSensorList(_probeList);
                 System.out.println("Ende Sensor: " + _probeNumber + " " + splitedMessage[2] + " Value: " + _probeList.get(_probeNumber-1).getcurrentfilling());
             }
         } catch(Exception e) 

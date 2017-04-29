@@ -17,8 +17,10 @@ public class Zentrale {
      */
     public static void main(String[] args) {
         try{
-            SimpleHttpServer webServer = new SimpleHttpServer();
-            SensorConnection _sensoren = new SensorConnection(5, webServer);
+            TCPWebserver _tcpServer = new TCPWebserver();
+            SensorConnection _sensoren = new SensorConnection(5, _tcpServer);
+            
+            new Thread(_tcpServer).start();
             _sensoren.start();
         }
         catch (Exception e) {
