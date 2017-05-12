@@ -49,6 +49,8 @@ public class TCPWebserver implements Runnable {
         private DataOutputStream _outgoingMessage;
         private String _message;
         private String[] _splitedRequest;
+        private String HTTP_HEADER = "Content-Type: text/html; charst=UT-8\r\n" + "Content-Lenght: ";
+        private String HTTP_HEADER_END = "\r\n\r\n";
         
         public TCPConnection(Socket client) {
             this._client = client;
@@ -65,8 +67,13 @@ public class TCPWebserver implements Runnable {
                 if ("/".equals(_splitedRequest[1].trim())) {
                     _outgoingMessage.writeBytes(createProbeInfo());
                 }
+                else if("/status".equals(_splitedRequest[1].trim())) {
+                    _outgoingMessage.writeBytes(createProbeInfo());
+                }
                 else {
-                    _outgoingMessage.writeBytes("Error: URL not found!");
+                    String OUTPUT = "<html><title>Not Found!</title><body><p>URL: " + _splitedRequest[1] + " not found</p></body></html>";
+                    _outgoingMessage.writeBytes("HTTP/1.1 404 Not Found\r\n" + HTTP_HEADER + OUTPUT.length() + HTTP_HEADER_END + OUTPUT);
+                   _outgoingMessage.flush();
                 }
                 System.out.println(_message);
                 _outgoingMessage.close();
@@ -79,9 +86,10 @@ public class TCPWebserver implements Runnable {
             String message;
             //If no sensor Information available send if or else if available
             if (_sensorList.size() == 0) {
-                message = "No Sensor Information!";
+                String OUTPUT = "<html><title>Status</title><body><p>No Sensor Information!</p></body></html>";
+                message = "HTTP/1.1 200 OK\r\n"+ HTTP_HEADER + OUTPUT.length() + HTTP_HEADER_END + OUTPUT;
             } else {
-                List<String> probeInfos = new ArrayList();
+                String OUTPUT = "<html><title>Status</title><body>";
                 //First loop for going throught all Probes
                 for (int i = 0; i < _sensorList.size(); i++) {
                     String fillingHistory = new String();
@@ -89,14 +97,13 @@ public class TCPWebserver implements Runnable {
                     for (int k = 0; k < _sensorList.get(i).getpastFillings().size(); k++) {
                         fillingHistory += _sensorList.get(i).getpastFillings().get(k).toString() + "; ";
                     }
-                    //Build the Probe Information String
-                    String probeInfo = "\n Probe Type: " + _sensorList.get(i).getsensorTyp() 
-                            + "\n Current remaining filling: " + _sensorList.get(i).getcurrentfilling()
-                            + "\n Fill History: " + fillingHistory;
-                    probeInfos.add(probeInfo);
+                    //Build the Probe Information HTML String
+                    OUTPUT += "<p><b>Probe Type: " + _sensorList.get(i).getsensorTyp() + "</b></p>";                    
+                    OUTPUT += "<p>Current remaining filling: " + _sensorList.get(i).getcurrentfilling() + "</p>";
+                    OUTPUT += "<p>Fill History: " + fillingHistory + "</p>";
                 }
-                //Convert the Array of all Probe information string into Byte
-                message = probeInfos.toString();
+                OUTPUT += "</body></html>";
+                message = "HTTP/1.1 200 OK\r\n" + HTTP_HEADER + OUTPUT.length() + HTTP_HEADER_END + OUTPUT;
             }
             return message;
         }
