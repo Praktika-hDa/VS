@@ -16,10 +16,10 @@ public class SensorConnection extends Thread {
     //private List _probeList = new ArrayList();
     private List<Sensor> _probeList = new ArrayList<Sensor>();
     private TCPWebserver _webServer;
-    public SensorConnection(int n, TCPWebserver server) {
+    public SensorConnection(int n, TCPWebserver server, List<Shop> shops) {
         this._webServer = server;
         for (int i = 0; i < n; i++) {
-            Sensor mySensor = new Sensor(i+1);
+            Sensor mySensor = new Sensor(i+1, shops);
             _probeList.add(mySensor);
         }
     }
@@ -45,6 +45,7 @@ public class SensorConnection extends Thread {
                 System.out.println("Anfang Sensor: " + _probeNumber + " " + splitedMessage[2] + " Value: " + _probeList.get(_probeNumber-1).getcurrentfilling());
                 _probeList.get(_probeNumber - 1).setcurrentFilling(_probeRemainingQuantity);
                 _probeList.get(_probeNumber - 1).setsensorTyp(_probeTyp);
+                _probeList.get(_probeNumber - 1).setIp(_receivedPacket.getAddress().getHostAddress());
                 _webServer.setSensorList(_probeList);
                 System.out.println("Ende Sensor: " + _probeNumber + " " + splitedMessage[2] + " Value: " + _probeList.get(_probeNumber-1).getcurrentfilling());
             }

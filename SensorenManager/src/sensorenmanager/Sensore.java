@@ -49,4 +49,11 @@ public class Sensore extends Thread {
     this._probeNumber = probeNumber;
     this._foodType = foodType;
     }
+    
+    public String getTyp() {
+        return _foodType;
+    }
+    public void refill(int quantity) {
+        _remainingQuantity += quantity;
+    }
 }
