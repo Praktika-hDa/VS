@@ -12,4 +12,6 @@ package shop;
 public class Product {
     String Name;
     float Price;
+    int Quantity;
+    boolean Refill;
 }

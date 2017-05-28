@@ -27,8 +27,9 @@ public class ShopInterfaceHandler implements ShopInterface.Iface {
     }
 
     public void Order(String product, int quantity, String ip, int port) throws TException {
-       String message = product + " " + quantity + " ";
         try {
+            _shop.Order(product, quantity);
+            String message = product + " " + quantity + " ";
             Socket clientSocket = new Socket(ip, port);
             DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
             outToServer.writeBytes(message + "\n");
